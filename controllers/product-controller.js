@@ -1,7 +1,6 @@
 const ProductRepository = require("../repositories/productRepository");
-const UserRepository = require("../repositories/userRepository");
-const sendMail = require('../repositories/sendMail');
 const ValidateAdmin = require('../middleware/ValidateAdmin');
+const Product = require("../models/product");
 
 // Obtiene todos los productos y los devuelve como respuesta en formato JSON
 let getProducts = (req, res) => {
@@ -14,7 +13,11 @@ let getProducts = (req, res) => {
 let addProduct = (req, res) => {
   
   ValidateAdmin.njwtAuth(req,res, null)
-  ProductRepository.addProduct(req.body, () => {
+
+  let product = new Product(req.body.id, req.body.nombre, req.body.precio)
+
+
+  ProductRepository.addProduct(product, () => {
     res.status(200).json({
       message: "Producto registrado correctamente",
     });
@@ -23,8 +26,10 @@ let addProduct = (req, res) => {
 
 // Actualiza un producto utilizando los datos proporcionados en el cuerpo de la solicitud y responde con un mensaje de éxito
 let updateAProduct = (req, res) => {
+  
+  let product = new Product(req.body.id, req.body.nombre, req.body.precio)
   ValidateAdmin.njwtAuth(req,res, null)
-  ProductRepository.updateProduct(req.body, () => {
+  ProductRepository.updateProduct(product, () => {
     res.status(200).json({
       message: "Producto actualizado correctamente",
     });
@@ -41,30 +46,9 @@ let deleteAProduct = (req, res) => {
   });
 };
 
-// Realiza una compra de producto para un usuario y responde con un mensaje de éxito
-let comprarProducto = (req, res) => {
-  const usuarioId = req.body.usuarioId; // ID del usuario desde el cuerpo de la solicitud
-  const productoId = req.body.productoId; // ID del producto desde el cuerpo de la solicitud
-  const cantidad = req.body.cantidad; // Cantidad desde el cuerpo de la solicitud
-
-  // Llama a UserRepository para realizar la compra
-  UserRepository.comprarProducto(usuarioId, productoId, cantidad, () => {
-    // Envía un correo de confirmación al usuario
-    const asuntoCorreo = 'Compra realizada';
-    const contenidoCorreo = 'Gracias por tu compra. Detalles de la compra: ...'; // Ajusta el contenido del correo según tus necesidades
-
-    //sendMail.enviarCorreo(usuarioId, asuntoCorreo, contenidoCorreo);
-
-    res.status(200).json({
-      message: "Compra realizada con éxito",
-    });
-  });
-};
-
 module.exports = {
   getProducts,
   addProduct,
   updateAProduct,
-  deleteAProduct,
-  comprarProducto
+  deleteAProduct
 };

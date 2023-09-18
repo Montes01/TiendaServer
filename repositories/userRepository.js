@@ -9,13 +9,12 @@ const db = mysql.createConnection({
   database: "tiendavirtual",
 });
 
-// Establece la conexión a la base de datos
 db.connect();
 
 class UserRepository {
-  // Método para agregar un nuevo usuario a la base de datos
-  static addUser(id, nombre, email, contrasena) {
-    // Consulta SQL para insertar un nuevo usuario en la tabla 'usuarios'
+  static addUser(product) {
+    const {id , nombre, email, contrasena} = product
+
 
     if (id == null || nombre  == null || email == null || contrasena == null) return false;
 
@@ -36,24 +35,7 @@ class UserRepository {
   }
 
   // Método para registrar una compra de un producto por un usuario
-  static comprarProducto(usuarioId, productoId, cantidad, callback) {
-    // Consulta SQL para registrar una compra en la tabla 'compras'
-    const query =
-      "INSERT INTO compras (usuario_id, producto_id, cantidad) VALUES (?, ?, ?)";
-    db.query(query, [usuarioId, productoId, cantidad], (err, result) => {
-      if (err) {
-        // Maneja errores al registrar la compra
-        console.error("Error al registrar la compra: " + err.message);
-        callback();
-        return false;
-      } else {
-        // Registro de éxito al registrar la compra
-        console.log("Compra realizada con éxito");
-        callback();
-        return true;
-      }
-    });
-  }
+
 
   // Método para obtener la información de un usuario por su ID
   static obtenerInformacionUsuario(usuarioId, callback) {

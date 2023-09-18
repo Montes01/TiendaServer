@@ -1,9 +1,9 @@
 const express = require('express');
-const productController = require('../controllers/product-controller');
+const buyController = require('../controllers/buyController');
 const router = express.Router();
 const ValidateAdmin = require('../middleware/ValidateAdmin')
 // Ruta para realizar la compra de un producto. Requiere autenticación JWT de administrador.
-router.post('/', productController.comprarProducto, ValidateAdmin.njwtAuth);
+router.post('/', buyController.comprarProducto, ValidateAdmin.njwtAuth);
 
 
 module.exports = router; 

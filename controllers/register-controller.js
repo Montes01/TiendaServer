@@ -6,7 +6,7 @@ let register = (req, res) => {
   const { id, nombre, email, contrasena } = req.body;
 
   let valid = userRepository.addUser(id, nombre, email, contrasena);
-
+console.log("------", valid);
   if (valid) {
     return res.status(201).send(
       { status: 'register ok' }
