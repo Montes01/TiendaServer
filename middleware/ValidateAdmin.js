@@ -12,8 +12,10 @@ let njwtAuth = (req, res, next) => {
     if (err || decoded.body.rol != "ADMIN") {
       return res.status(400).send({ auth: false, message: err });
     } else {
-      console.log( ({ auth: true, message: email = decoded.body.email, rol: decoded.body.rol}));
-    }
+      res.status(200)
+      next(); // Agrega esto para continuar con el siguiente middleware o controlador.
+   }
+   
   });
 };
 

@@ -1,28 +1,28 @@
 const bcrypt = require('bcryptjs');
 const userRepository = require('../repositories/userRepository');
-
+const User = require('../models/User');
 // Registra un usuario
 let register = (req, res) => {
   const { id, nombre, email, contrasena } = req.body;
 
-  let valid = userRepository.addUser(id, nombre, email, contrasena);
-console.log("------", valid);
-  if (valid) {
-    return res.status(201).send(
-      { status: 'register ok' }
-    );
-  } else {
-    return res.status(404).send(
-      { status: 'bad register' }
-    );
-  }
+  let user = new User(id, nombre, email, contrasena);
+
+  userRepository.addUser(user, (valid) => {
+    if (valid) {
+      res.status(200).json({
+        message: "Usuario registrado con éxito",
+      })
+    } else {
+      res.status(500).json({
+        message: "Error al registrar el usuario",
+      })
+    }
+  });
+
 }
 
-// Obtiene y devuelve la información del perfil de un usuario
 let verPerfilUsuario = (req, res) => {
-  const usuarioId = req.query.id; // Suponiendo que el ID del usuario se pasa como parte de la URL
-
-  // Llama a la función de userRepository para obtener la información del usuario
+  const usuarioId = req.query.id; 
   userRepository.obtenerInformacionU
   suario(usuarioId, (error, usuario) => {
     if (error) {
@@ -34,10 +34,11 @@ let verPerfilUsuario = (req, res) => {
         message: "Usuario no encontrado",
       });
     } else {
-      const { id, nombre, email } = usuario; // Extrae solo los datos relevantes del usuario
+      const { id, nombre, email } = usuario; 
+      let user = new User(id, nombre, email)
       res.status(200).json({
         message: "Información de perfil obtenida con éxito",
-        usuario: { id, nombre, email }, // Devuelve la información del usuario
+        usuario:  user , 
       });
     }
   });

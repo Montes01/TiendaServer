@@ -1,22 +1,19 @@
-const bcrypt = require('bcryptjs');  // Importa la biblioteca para el hash de contraseñas
-const signingKey = require('../config/keys');  // Importa la clave de firma (signing key)
-const generateToken = require('../helpers/generator-token');  // Importa la función para generar tokens JWT
+const bcrypt = require('bcryptjs');  
+const signingKey = require('../config/keys');  )
+const generateToken = require('../helpers/generator-token');  
 
-// Función para autenticación
 let auth = (req, res) => {
-  let email = req.body.email;  // Obtiene el correo electrónico desde la solicitud
-  let password = req.body.password;  // Obtiene la contraseña desde la solicitud
-  let rol = req.body.rol;  // Obtiene el rol desde la solicitud
-  console.log("Email", email);  // Imprime el correo electrónico en la consola
-  console.log("Password", password);  // Imprime la contraseña en la consola
+  let email = req.body.email;  
+  let password = req.body.password; 
+  let rol = req.body.rol;  
+  console.log("Email", email);  
+  console.log("Password", password);  
 
-  // Genera un token JWT con información de correo electrónico y rol, con una fecha de vencimiento
+  
   let token = generateToken(
     { email: email, rol: rol }, signingKey.SIGNING_KEY_TOKEN,
-    new Date().getTime() + (100 * 60 * 1000)  // El token expirará en 100 minutos
+    new Date().getTime() + (100 * 60 * 1000)  
   );
-
-  // Configuración de la cookie para el token de actualización
   let cookieConfig = {
     domain: 'localhost',
     path: '/refresh', 

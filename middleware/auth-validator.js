@@ -3,7 +3,7 @@ const { check, validationResult } = require('express-validator');
 
 let validatorParams = [
             check('email').isEmail(),
-            check('password').isLength({ min: 8, max: 15})
+            check('contrasena').isLength({ min: 10, max: 15})
       ];
 
       

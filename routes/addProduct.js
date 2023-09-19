@@ -1,7 +1,8 @@
 const express = require('express');
 const productController = require('../controllers/product-controller');
 const router = express.Router();
-// Ruta para agregar un producto. Requiere autenticación JWT de administrador.
-router.post('/', productController.addProduct, );
+const validateAdmin = require('../middleware/ValidateAdmin');
+
+router.post('/', validateAdmin.njwtAuth, productController.addProduct );
 
 module.exports = router; 
